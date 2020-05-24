@@ -1,44 +1,65 @@
 package ru.lion.json;
 
+import com.sun.management.OperatingSystemMXBean;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.management.ManagementFactory;
-import java.lang.management.OperatingSystemMXBean;
+import java.text.DecimalFormat;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 public class Main extends JavaPlugin {
+    private double[] memory;
+    private double cpuUsed;
+    private OperatingSystemMXBean osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
 
-    private String[] plugins;
-    private long[] memory;
-    private long memoryUsed;
-    private long cpuUsed;
     public void onEnable() {
-        for (int i = 0; i <= plugins.length; i++) {
-            Bukkit.broadcastMessage(plugins[i]);
-        }
+        returnPlugins();
+        returnMemory();
+        returnProcessor();
+
+        System.out.println("----------------------------------");
+
+        System.out.println("Cpu load");
+        System.out.println(cpuUsed);
+
+        System.out.println("----------------------------------");
     }
 
-    public void returnPlugins() {
-        int i = 0;
-        for(Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
+    public void returnPlugins() throws NullPointerException {
+        PluginManager pm = Bukkit.getPluginManager();
 
-            //System.out.println(plugin.getName());
-            plugins[i] = plugin.getName() + "\n";
-            i++;
+        Plugin[] plugins = pm.getPlugins();
+        String[] names = new String[plugins.length];
+        for (int i=0; i < plugins.length; ++i) {
+            names[i] = plugins[i].getName();
         }
-        return;
+        Arrays.asList(names).forEach(System.out::println);
+
+//        List<String> names =
+//                Arrays.asList(pm.getPlugins()).stream()
+//                        .map(p -> p.getName()).collect(Collectors.toList());
+//        names.forEach(System.out::println);
     }
 
     public void returnMemory() {
-        memory[0] = Runtime.getRuntime().maxMemory() / (1024 * 1024);
-        memory[1] = Runtime.getRuntime().totalMemory() / (1024 * 1024);
-        memory[2] = Runtime.getRuntime().freeMemory() / (1024 * 1024);
+
+        System.out.println("Used Memory   :  " + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024) + " MB" );
+        System.out.println("Free Memory   : " + Runtime.getRuntime().freeMemory() / (1024 * 1024) + " MB");
+        System.out.println("Total Memory  : " + Runtime.getRuntime().totalMemory() / (1024 * 1024) + " MB");
+        System.out.println("Max Memory    : " + Runtime.getRuntime().maxMemory() / (1024 * 1024) + " MB");
         return;
+
     }
 
     public void returnProcessor() {
-
+        DecimalFormat df = new DecimalFormat("#,##");
+        cpuUsed = Double.parseDouble(df.format(osBean.getSystemCpuLoad()*100));
     }
 
 }
