@@ -1,29 +1,22 @@
 package ru.lion.json;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
+import java.lang.management.ManagementFactory;
+import java.lang.management.OperatingSystemMXBean;
 
 public class Main extends JavaPlugin {
 
     private String[] plugins;
-
-
+    private long[] memory;
+    private long memoryUsed;
+    private long cpuUsed;
     public void onEnable() {
+        for (int i = 0; i <= plugins.length; i++) {
+            Bukkit.broadcastMessage(plugins[i]);
+        }
     }
 
     public void returnPlugins() {
@@ -35,6 +28,17 @@ public class Main extends JavaPlugin {
             i++;
         }
         return;
+    }
+
+    public void returnMemory() {
+        memory[0] = Runtime.getRuntime().maxMemory() / (1024 * 1024);
+        memory[1] = Runtime.getRuntime().totalMemory() / (1024 * 1024);
+        memory[2] = Runtime.getRuntime().freeMemory() / (1024 * 1024);
+        return;
+    }
+
+    public void returnProcessor() {
+
     }
 
 }
