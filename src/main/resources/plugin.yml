@@ -1,5 +1,5 @@
-name: ServerJson
+name: SpigotStatistics
 version: ${project.version}
-main: ru.lion.json.Main
-authors: [Lion]
-description: Reading json request and return list plugins
+main: App
+authors: [okeyndell]
+description: collects information about the state of the server and returns it when a request is received.
